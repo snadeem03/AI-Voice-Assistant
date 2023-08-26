@@ -1,0 +1,10 @@
+To develop this AI assistant we have used several python packages and API's.lets see what all are they :
+
+1.speech_recognition
+2.openai
+3.wikipedia
+4.pyttsx3
+5.os
+6.sys
+7.twilio
+webbrowser
