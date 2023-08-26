@@ -73,6 +73,7 @@ from twilio.rest import Client  # OTP authentication
 import webbrowser
 import subprocess as sp
 import re as regular
+import speedtest_cli as sp
 
 # -----------------------------#
 
@@ -167,6 +168,28 @@ def two_factor_authentication():
             sys.exit("Shutting down due to security reasons")
 
 
+def run_speedtest():
+    try:
+        speedtest_obj=sp.Speedtest()
+        server=speedtest_obj.get_best_server()
+
+        download_speed=speedtest_obj.download()/1000000
+        upload_speed=speedtest_obj.upload()/1000000
+        server_info=f"The best server {server['host']} is found at {server['country']}"
+        return server_info,download_speed,upload_speed
+
+    except speed.ConfigRetrievalError:
+        print("Failed to retrieve configuration. Please check your internet connection")
+
+    except speed.NoMatchedServers:
+        print("No servers found,please try after sometime")
+
+
+
+    
+    
+
+
 def speak(name):
     if not is_authenticated:
         authentication(attempts_remaining)
@@ -206,6 +229,18 @@ def listen():
         specifications_wordlist = ["specifications", "capabilities", "yourself"]
         if any(word in recognized_text for word in specifications_wordlist):
             specifications()
+
+
+        if str(recognized_text.lower()).find("Speedtest")!=1:
+            engine.say("Running speed test..Please wait ")
+            engine.runAndWait()
+            info,downSpeed,upSpeed=run_speedtest()
+            engine.say(info)
+            engine.say(f"The download speed is {downSpeed} megabits per second")
+            engine.say(f"The upload speed is {upSpeed} megabits per second")
+            engine.runAndWait()
+
+
 
         if str(recognized_text.lower()).find("network information") != -1:
             engine.say("Gathering network information...")
