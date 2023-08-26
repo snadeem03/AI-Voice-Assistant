@@ -1,6 +1,5 @@
 """
-Here we are going to develop a jarvis AI assistant using
-several modules like speech recognition and ...
+
 
 #1 pyttsx3 is cross-platform tts engines ,we need to use init() function to get a
 new instance of engine it takes 2 params :
@@ -72,6 +71,8 @@ import sys
 import os
 from twilio.rest import Client  # OTP authentication
 import webbrowser
+import subprocess as sp
+import re as regular
 
 # -----------------------------#
 
@@ -206,6 +207,92 @@ def listen():
         if any(word in recognized_text for word in specifications_wordlist):
             specifications()
 
+        if str(recognized_text.lower()).find("network information") != -1:
+            engine.say("Gathering network information...")
+            engine.runAndWait()
+            result = sp.run(["netsh", "wlan", "show", "interfaces"], capture_output=True, text=True).stdout
+
+            # We are using regular expressions here
+            description_match = regular.search(r"Description\s+:\s+(.*)", result)
+
+            if description_match:
+                description = description_match.group(1)
+                engine.say(f"The name of the wireless adapter is :{description.strip()}")
+                engine.runAndWait()
+            else:
+                engine.say("Sorry,cannot find the name of the adapter")
+                engine.runAndWait()
+
+            physical_address_match = regular.search(r"Physical address\s+:\s+(\S+)", result)
+
+            if physical_address_match:
+                physical_address = physical_address_match.group(1)
+                engine.say(f"The MAC address of the device is : {physical_address}")
+                engine.runAndWait()
+            else:
+                engine.say("Sorry,cannot find physical address of your machine")
+                engine.runAndWait()
+
+            # finding the state :
+            state_match = regular.search(r"State\s+:\s+(\S+)", result)
+
+            if state_match:
+                state = state_match.group(1)
+                engine.say(f"The machine is {state}")
+                engine.runAndWait()
+            else:
+                engine.say("Sorry,cannot find state  of your machine")
+                engine.runAndWait()
+
+            # finding the name of the network :
+            ssid_match = regular.search(r"SSID\s+:\s+(\S+)", result)
+
+            if ssid_match:
+                ssid = ssid_match.group(1)
+                engine.say(f"The name of the network is {ssid}")
+                engine.runAndWait()
+            else:
+                engine.say("Sorry,cannot find name of the network")
+                engine.runAndWait()
+
+            # finding the MAC address of the router :
+            bssid_match = regular.search(r"BSSID\s+:\s+(\S+)", result)
+
+            if bssid_match:
+                bssid = bssid_match.group(1)
+                engine.say(f"The mac address of the router is {bssid}")
+                engine.runAndWait()
+            else:
+                engine.say("Sorry,cannot find MAC address of the router")
+                engine.runAndWait()
+
+            # finding the security level of the network :
+            authentication_match = regular.search(r"Authentication\s+:\s+(\S+)", result)
+
+            if authentication_match:
+                authentication = authentication_match.group(1)
+
+                if (authentication == "WPA2-Personal"):
+                    engine.say(f"The network you are in is secured with authentication level {authentication}")
+                    engine.runAndWait()
+
+                else:
+                    engine.say("I think you are inside an in-secured network")
+                engine.runAndWait()
+            else:
+                print("Authentication not found in the input string.")
+
+            # finding the signal strength :
+            signal_strength_match = regular.search(r"Signal\s+:\s+(\S+)", result)
+
+            if signal_strength_match:
+                signal_strength = signal_strength_match.group(1)
+                engine.say(f"The signal strength of the network is {signal_strength}")
+                engine.runAndWait()
+            else:
+                engine.say("Sorry,cannot find signal strength  of the network")
+                engine.runAndWait()
+
         if str(recognized_text.lower()).find("open youtube") != -1:
             engine.say("Opening youtube...")
             engine.runAndWait()
@@ -257,17 +344,6 @@ def listen():
 
                     except wiki.exceptions.DisambiguationError as e:
                         print("disambiguations error occured ")
-
-
-
-
-
-
-
-
-
-
-
 
 
 
