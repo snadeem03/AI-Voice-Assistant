@@ -10,3 +10,4 @@
 8.webbrowser (in-built)
 9.subprocess (in-built)
 10.re (in-built)
+11.speedtest-cli >=2.1.3
