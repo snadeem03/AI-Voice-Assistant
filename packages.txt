@@ -8,3 +8,5 @@ To develop this AI assistant we have used several python packages and API's.lets
 6.sys
 7.twilio
 webbrowser
+subprocess
+re
