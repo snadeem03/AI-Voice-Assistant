@@ -1,12 +1,12 @@
-To develop this AI assistant we have used several python packages and API's.lets see what all are they :
+# DEPENDENCIES PACKAGES :
 
-1.speech_recognition
-2.openai
-3.wikipedia
-4.pyttsx3
-5.os
-6.sys
-7.twilio
-webbrowser
-subprocess
-re
+1.speech_recognition >=3.10
+2.openai >=0.27.8
+3.wikipedia >=1.4.0
+4.pyttsx3 >=2.90
+5.os (in-built)
+6.sys (in-built)
+7.twilio >=8.5.0
+8.webbrowser (in-built)
+9.subprocess (in-built)
+10.re (in-built)
